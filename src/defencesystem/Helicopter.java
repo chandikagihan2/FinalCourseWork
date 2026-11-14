@@ -8,7 +8,13 @@ package defencesystem;
  *
  * @author chand
  */
-public class Helicopter extends javax.swing.JFrame {
+public class Helicopter extends javax.swing.JFrame implements AreaStatusObserver {
+
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     /**
      * Creates new form Helicopter
@@ -31,8 +37,8 @@ public class Helicopter extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
+        jTextField5 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
@@ -68,6 +74,11 @@ public class Helicopter extends javax.swing.JFrame {
         jButton3.setText("Laser Oparation");
 
         jButton5.setText("Send");
+        jButton5.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jButton5StateChanged(evt);
+            }
+        });
 
         jLabel1.setText("Soldier Count");
 
@@ -191,12 +202,28 @@ public class Helicopter extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton5StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jButton5StateChanged
+        String message = jTextField5.getText().trim();
+
+        if (message.isEmpty()) {
+            return;
+        }
+
+        if (mainController != null) {
+            mainController.receiveUnitMessage("Helicopter", message);
+
+            jTextArea1.append("Helicopter: " + message + "\n");
+
+            jTextField5.setText("");
+        }
+    }//GEN-LAST:event_jButton5StateChanged
 
     /**
      * @param args the command line arguments
@@ -250,4 +277,34 @@ public class Helicopter extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(boolean areastatus) {
+        if (areastatus) {
+            jLabel3.setText("Area Cleared");
+        } else {
+            jLabel3.setText("Area not Cleared");
+        }
+    }
+
+    @Override
+    public void recivemassege(String massege) {
+        jTextArea1.append("Main Controller: " + massege + "\n");
+    }
+
+    @Override
+    public void reciveslidervalue(int slidervalue) {
+        jTextArea1.append("Main Controller Slider: " + slidervalue + "\n");
+    }
+
+    @Override
+    public void reciveprivatemassege(String massege) {
+        jTextArea1.append("Private Message: " + massege + "\n");
+    }
+
+    public void setOperationButtons(int value) {
+        jButton1.setEnabled(value >= 20);
+        jButton2.setEnabled(value >= 40);
+        jButton3.setEnabled(value >= 60);
+    }
 }
