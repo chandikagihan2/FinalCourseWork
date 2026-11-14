@@ -4,17 +4,58 @@
  */
 package defencesystem;
 
+interface AreaStatusObserver {
+
+    void update(boolean areastatus);
+
+    void recivemassege(String massege);
+
+    void reciveslidervalue(int slidervalue);
+
+    void reciveprivatemassege(String massege);
+}
+
 /**
  *
  * @author chand
  */
 public class MainController extends javax.swing.JFrame {
 
+    private Helicopter helicopter;
+    private Tank tank;
+    private Submarine submarine;
+
     /**
      * Creates new form MainController
      */
     public MainController() {
         initComponents();
+
+        helicopter = new Helicopter();
+        tank = new Tank();
+        submarine = new Submarine();
+
+        helicopter.setMainController(this);
+        tank.setMainController(this);
+        submarine.setMainController(this);
+
+        helicopter.setVisible(true);
+        tank.setVisible(true);
+        submarine.setVisible(true);
+
+        notifyObservers(false);
+    }
+
+    public void notifyObservers(boolean status) {
+        helicopter.update(status);
+        tank.update(status);
+        submarine.update(status);
+    }
+
+    public void updateOperationButtons(int value) {
+        helicopter.setOperationButtons(value);
+        tank.setOperationButtons(value);
+        submarine.setOperationButtons(value);
     }
 
     /**
@@ -82,6 +123,11 @@ public class MainController extends javax.swing.JFrame {
         jSlider1.setPaintTicks(true);
         jSlider1.setSnapToTicks(true);
         jSlider1.setValue(0);
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -235,11 +281,56 @@ public class MainController extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+        boolean status = jCheckBox1.isSelected();
+
+        notifyObservers(status);
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        String message = jTextArea1.getText().trim();
+
+        if (message.isEmpty()) {
+            return;
+        }
+
+        if (jCheckBox2.isSelected()) {
+
+            String selectedUnit = jComboBox1.getSelectedItem().toString();
+
+            switch (selectedUnit) {
+                case "Helicoptor":
+                    helicopter.reciveprivatemassege(message);
+                    jTextArea2.append("Private: " + message + "\n");
+                    break;
+
+                case "Tank":
+                    tank.reciveprivatemassege(message);
+                    jTextArea3.append("Private: " + message + "\n");
+                    break;
+
+                case "Submarine":
+                    submarine.reciveprivatemassege(message);
+                    jTextArea4.append("Private: " + message + "\n");
+                    break;
+
+                default:
+                    javax.swing.JOptionPane.showMessageDialog(this, "Select a Defence Unit!");
+                    return;
+            }
+
+        } else {
+
+            helicopter.recivemassege(message);
+            tank.recivemassege(message);
+            submarine.recivemassege(message);
+
+            jTextArea2.append("Main Controller: " + message + "\n");
+            jTextArea3.append("Main Controller: " + message + "\n");
+            jTextArea4.append("Main Controller: " + message + "\n");
+        }
+
+        jTextArea1.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -249,6 +340,11 @@ public class MainController extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        int value = jSlider1.getValue();
+        updateOperationButtons(value);
+    }//GEN-LAST:event_jSlider1StateChanged
 
     /**
      * @param args the command line arguments
@@ -309,4 +405,21 @@ public class MainController extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
     // End of variables declaration//GEN-END:variables
+
+    public void receiveUnitMessage(String unit, String message) {
+
+        switch (unit) {
+            case "Helicopter":
+                jTextArea2.append("Helicopter: " + message + "\n");
+                break;
+
+            case "Tank":
+                jTextArea3.append("Tank: " + message + "\n");
+                break;
+
+            case "Submarine":
+                jTextArea4.append("Submarine: " + message + "\n");
+                break;
+        }
+    }
 }
