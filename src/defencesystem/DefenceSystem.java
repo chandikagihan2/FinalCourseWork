@@ -7,8 +7,7 @@ package defencesystem;
 /**
  *
  * @author chand
- */    
-    public interface DefenceController {
-    void receiveMessage(String message, String senderName);
-    void sendPrivateMessage(String message, String receiver);
+ */
+public class DefenceSystem {
+    
 }
