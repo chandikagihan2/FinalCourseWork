@@ -9,6 +9,7 @@ package defencesystem;
  * @author chand
  */
 public class Helicoptor extends javax.swing.JFrame {
+    private DefenceController controller;
 
     /**
      * Creates new form Helicoptor
