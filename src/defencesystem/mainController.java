@@ -6,6 +6,7 @@ package defencesystem;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author chand
@@ -15,8 +16,26 @@ public class mainController extends javax.swing.JFrame {
     /**
      * Creates new form mainController
      */
+    private Helicoptor helicopter;
+    private Tank tank;
+    private Submarine submarine;
+
     public mainController() {
         initComponents();
+        setTitle("Main Controller");
+        setVisible(true);
+    }
+
+    public void setHelicopter(Helicoptor helicopter) {
+        this.helicopter = helicopter;
+    }
+
+    public void setTank(Tank tank) {
+        this.tank = tank;
+    }
+
+    public void setSubmarine(Submarine submarine) {
+        this.submarine = submarine;
     }
 
     /**
@@ -73,9 +92,12 @@ public class mainController extends javax.swing.JFrame {
         jLabel3.setText("Ammo Amount");
 
         jSlider1.setMajorTickSpacing(20);
-        jSlider1.setMinorTickSpacing(10);
+        jSlider1.setMinorTickSpacing(5);
         jSlider1.setPaintLabels(true);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setSnapToTicks(true);
         jSlider1.setToolTipText("");
+        jSlider1.setValue(0);
         jSlider1.setValueIsAdjusting(true);
 
         jLabel4.setText("Position");
@@ -163,7 +185,7 @@ public class mainController extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 15, Short.MAX_VALUE)))
+                        .addGap(0, 11, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -176,7 +198,7 @@ public class mainController extends javax.swing.JFrame {
                             .addComponent(jLabel6))
                         .addGap(2, 2, 2)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textArea1, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                    .addComponent(textArea1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                     .addComponent(textArea2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(textArea3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -186,15 +208,39 @@ public class mainController extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+        boolean isCleared = jCheckBox1.isSelected();
+
+        if (helicopter != null) {
+            helicopter.setAreaCondition(isCleared);
+        }
+        if (tank != null) {
+            tank.setAreaCondition(isCleared);
+        }
+        if (submarine != null) {
+            submarine.setAreaCondition(isCleared);
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
+        String selectedUnit = (String) jComboBox2.getSelectedItem();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String selectedUnit = (String) jComboBox2.getSelectedItem();
+
+        if ("Helicoptor".equals(selectedUnit) && helicopter != null) {
+            jLabel1.setText("Soldier Count: " + helicopter.getSoldierCount());
+            jLabel2.setText("Ammo Count: " + helicopter.getAmmoCount());
+            jSlider1.setValue(helicopter.getPosition());
+        } else if ("Tank".equals(selectedUnit) && tank != null) {
+            jLabel1.setText("Soldier Count: " + tank.getSoldierCount());
+            jLabel2.setText("Ammo Count: " + tank.getAmmoCount());
+            jSlider1.setValue(tank.getPosition());
+        } else if ("Submarine".equals(selectedUnit) && submarine != null) {
+            jLabel1.setText("Soldier Count: " + submarine.getSoldierCount());
+            jLabel2.setText("Ammo Count: " + submarine.getAmmoCount());
+            jSlider1.setValue(submarine.getPosition());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
