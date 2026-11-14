@@ -4,12 +4,17 @@ package defencesystem;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author chand
  */
-public class Submarine extends javax.swing.JFrame {
+public class Submarine extends javax.swing.JFrame implements AreaStatusObserver {
+
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     /**
      * Creates new form Submarine
@@ -236,7 +241,19 @@ public class Submarine extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        String message = jTextField5.getText().trim();
+
+        if (message.isEmpty()) {
+            return;
+        }
+
+        if (mainController != null) {
+            mainController.receiveUnitMessage("Submarine", message);
+
+            jTextArea1.append("Submarine: " + message + "\n");
+
+            jTextField5.setText("");
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -244,7 +261,7 @@ public class Submarine extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField5ActionPerformed
 
     /**
@@ -309,4 +326,35 @@ public class Submarine extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(boolean areastatus) {
+        if (areastatus) {
+            jLabel3.setText("Area Cleared");
+        } else {
+            jLabel3.setText("Area not Cleared");
+        }
+    }
+
+    @Override
+    public void recivemassege(String massege) {
+        jTextArea1.append("Main Controller: " + massege + "\n");
+    }
+
+    @Override
+    public void reciveslidervalue(int slidervalue) {
+        jTextArea1.append("Main Controller Slider: " + slidervalue + "\n");
+    }
+
+    @Override
+    public void reciveprivatemassege(String massege) {
+        jTextArea1.append("Private Message: " + massege + "\n");
+    }
+
+    public void setOperationButtons(int value) {
+        jButton3.setEnabled(value >= 20);
+        jButton4.setEnabled(value >= 40);
+        jButton5.setEnabled(value >= 60);
+        jButton7.setEnabled(value >= 80);
+    }
 }
