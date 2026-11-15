@@ -39,6 +39,12 @@ public class MainController extends javax.swing.JFrame {
         tank.setMainController(this);
         submarine.setMainController(this);
 
+        this.setLocation(0, 0);
+
+        helicopter.setLocation(50, 450);
+        tank.setLocation(750, 50);
+        submarine.setLocation(750, 450);
+
         helicopter.setVisible(true);
         tank.setVisible(true);
         submarine.setVisible(true);
